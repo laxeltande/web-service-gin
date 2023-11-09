@@ -17,9 +17,11 @@ type album struct {
 // assign the handler function to an endpoint path
 func main() {
 	router := gin.Default()
-	router.GET("/albums", getAlbums) //Why do we pass the name of the function??
+	router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
+	router.DELETE("/albums/:id", deleteAlbum) //Create function
+	router.PUT("/albums")
 	err := router.Run("localhost:8080")
 	if err != nil {
 		return
@@ -67,5 +69,23 @@ func getAlbumByID(c *gin.Context) {
 			return
 		}
 	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+}
+
+// deleteAlbum removes an album whose ID value matches the id
+func deleteAlbum(c *gin.Context) {
+	id := c.Param("id")
+
+	// Loop over the list of albums to find the index of the album with the specified ID.
+	for i, a := range albums {
+		if a.ID == id {
+			// Remove the album from the slice using append.
+			albums = append(albums[:i], albums[i+1:]...)
+			c.IndentedJSON(http.StatusOK, gin.H{"message": "album deleted"})
+			return
+		}
+	}
+
+	// If the album with the specified ID is not found, return a not found status.
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
