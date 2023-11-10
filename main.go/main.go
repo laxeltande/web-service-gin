@@ -73,19 +73,26 @@ func getAlbumByID(c *gin.Context) {
 }
 
 // deleteAlbum removes an album whose ID value matches the id
+// deleteAlbum deletes the album with the given ID from the albums slice.
 func deleteAlbum(c *gin.Context) {
 	id := c.Param("id")
 
-	// Loop over the list of albums to find the index of the album with the specified ID.
+	// Find the index of the album with the specified ID.
+	index := -1
 	for i, a := range albums {
 		if a.ID == id {
-			// Remove the album from the slice using append.
-			albums = append(albums[:i], albums[i+1:]...)
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "album deleted"})
-			return
+			index = i
+			break
 		}
 	}
 
-	// If the album with the specified ID is not found, return a not found status.
+	// If the album is found, remove it from the slice.
+	if index != -1 {
+		albums = append(albums[:index], albums[index+1:]...)
+		c.IndentedJSON(http.StatusOK, gin.H{"message": "album deleted"})
+		return
+	}
+
+	// If the album is not found, return a not found status.
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
