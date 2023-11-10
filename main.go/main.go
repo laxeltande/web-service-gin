@@ -77,10 +77,10 @@ func deleteAlbum(c *gin.Context) {
 	id := c.Param("id")
 
 	// Find the index of the album with the specified ID.
-	index := -1
+	index := -1 //album hasn't been founf yet
 	for i, a := range albums {
 		if a.ID == id {
-			index = i
+			index = i //album was found
 			break
 		}
 	}
@@ -92,6 +92,6 @@ func deleteAlbum(c *gin.Context) {
 		return
 	}
 
-	// If the album is not found, return a not found status.
+	// If the album is not found (index = -1), return a not found status.
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
