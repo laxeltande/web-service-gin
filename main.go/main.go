@@ -72,7 +72,6 @@ func getAlbumByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
 
-// deleteAlbum removes an album whose ID value matches the id
 // deleteAlbum deletes the album with the given ID from the albums slice.
 func deleteAlbum(c *gin.Context) {
 	id := c.Param("id")
